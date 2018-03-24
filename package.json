@@ -1,0 +1,25 @@
+{
+  "name": "navi",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/navi.js",
+  "scripts": {
+    "build": "webpack",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/* --require babel-register",
+    "prepublishOnly": "npm run build",
+    "test": "mocha -R spec test/* --require babel-register"
+  },
+  "author": "Johnny Hu <heyitsjhu@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.0.2",
+    "coveralls": "^2.13.1",
+    "istanbul": "^1.0.0-alpha",
+    "mocha": "^3.4.2",
+    "webpack": "^3.10.0"
+  }
+}
