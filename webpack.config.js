@@ -6,8 +6,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'navi.min.js',
-    libraryTarget: 'umd',
-    library: throw new Error("Don't forget to set your library name!")
+    libraryTarget: 'var',
+    library: 'Navi'
   },
   module: {
     rules: [

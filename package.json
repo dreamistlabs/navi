@@ -2,7 +2,7 @@
   "name": "navi",
   "version": "0.0.1",
   "description": "",
-  "main": "./src/navi.js",
+  "main": "./dist/nav.min.js",
   "scripts": {
     "build": "webpack",
     "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/* --require babel-register",
