@@ -2,14 +2,17 @@
   "name": "navi",
   "version": "0.0.1",
   "description": "",
+  "homepage": "",
+  "author": "Johnny Hu <heyitsjhu@gmail.com>",
   "main": "./dist/nav.min.js",
+  "repository": "github:dreamistlabs/navi",
+  "bugs": "https://github.com/dreamistlabs/navi/issues",
   "scripts": {
     "build": "webpack",
     "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/* --require babel-register",
     "prepublishOnly": "npm run build",
     "test": "mocha -R spec test/* --require babel-register"
   },
-  "author": "Johnny Hu <heyitsjhu@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",
