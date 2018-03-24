@@ -1,15 +1,11 @@
-import { assert } from 'chai';
-import { expect } from 'chai';
-// import { should } from 'chai';
-import * as callMe from '../src/navi';
+var assert = chai.assert;
 
-describe('#rockstar', () => {
-  it('should return a string', () => {
-    let result = callMe.rockstar();
-    assert.isString(result);
+describe('something', function() {
+  it('something that is something', function() {
+    // assert.equal(imagezys.length, 5);
   });
-  it('should call you a rockstar', () => {
-    let result = callMe.rockstar();
-    expect(result).to.have.string('You are a rockstar!');
+
+  it('something', function() {
+    // assert.equal(imagezy.nodeName, 'DIV');
   });
 });

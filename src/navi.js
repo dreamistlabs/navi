@@ -69,4 +69,4 @@ class Navi {
   }
 }
 
-module.exports = Navi;
+// module.exports = Navi;
