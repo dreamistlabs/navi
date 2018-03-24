@@ -1,0 +1,47 @@
+ body {
+  margin: 5px;
+  padding: 0;
+}
+
+section.section {
+  min-height: 100vh;
+  background-color: #D8D8D8;
+  border: 1px solid #313131;
+}
+
+.section:first-child {
+  min-height: 150vh;
+}
+.section:nth-child(3) {
+  min-height: 50vh;
+}
+.section:last-child {
+  min-height: 250vh;
+}
+
+.visual-nav-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  list-style: none;
+  height: 65vh;
+}
+.navi-item {
+  display: block;
+  height: 10px;
+  width: 10px;
+  border: 1px solid red;
+  border-radius: 0;
+}
+.navi-item.navi--current {
+  background-color: red;
+}
+
+footer {
+  min-height: 200vh;
+}
