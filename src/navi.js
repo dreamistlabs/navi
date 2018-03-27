@@ -1,14 +1,18 @@
 class Navi {
   constructor(opts = {}) {
     this.jqueryCheck(),
-    this.opts = opts,
-    this.currentTickClass = 'navi--current',
-    this.endingValue = this.opts.endingValue || 50,
-    this.startingValue = this.opts.startingValue || 0,
-    this.tickCollection = $( '.navi-item' ),
-    this.sections = $( '.navi-section' ),
-    this.sectionStartPositions = this.sections.map((i, section) => $( section ).offset().top ),
-    this.sectionHeights = this.sections.map((i, section) => $( section ).outerHeight()),
+    this.opts                   = opts,
+    this.currentTickClass       = 'navi--current',
+    this.endingValue            = this.opts['endingValue']   || 50,
+    this.startingValue          = this.opts['startingValue'] || 0;
+    this.tickClass              = this.opts['ticks']         || 'navi-item',
+    this.sectionClass           = this.opts['sections']      || 'navi-section',
+
+    this.tickCollection         = this.getCollection(this.tickClass);
+    this.sectionCollection      = this.getCollection(this.sectionClass);
+
+    this.sectionStartPositions  = this.sectionCollection.map((i, section) => $( section ).offset().top ),
+    this.sectionHeights         = this.sectionCollection.map((i, section) => $( section ).outerHeight());
     this.executeScript();
   }
 
@@ -18,7 +22,19 @@ class Navi {
     }
   }
 
+  getCollection(name) {
+    var className = '.' + name;
+    if ( $( className ).length === 0 ) {
+      throw new Error('Missing Collection! Navi was unable to collect elements with class ' + name );
+    } else {
+      return $( className );
+    }
+  }
+
   executeScript() {
+
+    // need to figure out how to set active class on load. keep it dry!
+
     $( document ).scroll(() => {
       const scrollPosition = $( window ).scrollTop();
 
@@ -41,9 +57,11 @@ class Navi {
             //   'scrollPos:', scrollPosition,
             //   'nextStart:', nextSectionStart
             // );
+            const startEndValueRange = this.endingValue - this.startingValue;
+            const percentageOfDistanceScrolled = (scrollPosition - this.sectionStartPositions[i]) / sectionHeight;
 
            // change border radius
-            const radius =  this.startingValue + (this.endingValue - this.startingValue) * ((scrollPosition - this.sectionStartPositions[i] )  / sectionHeight);
+            const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
             $( el ).css('border-radius', radius + '%');
           }
 

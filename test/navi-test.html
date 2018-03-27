@@ -7,34 +7,49 @@
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script>mocha.setup('bdd')</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+      crossorigin="anonymous"
+      id="jqueryScript"></script>
 
     <!-- load code you want to test here -->
     <script src="../src/navi.js"></script>
 
     <!-- load your test files here -->
     <script src="./navi.test.js"></script>
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      position: relative;
+      /*overflow-y: hidden;*/
+    }
+     #mocha {
+      position: fixed;
+      margin: 0;
+      padding: 60px 50px;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #fff;
+      z-index: 100;
+      overflow-y: scroll;
+     }
+     .navi-list {
+      z-index: -1;
+     }
+    </style>
   </head>
   <body>
     <div id="mocha"></div>
-    <nav class="nav visual-nav">
-      <ul class="visual-nav-list">
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
-        <li class="navi-item"></li>
+    <nav class="navi-nav">
+      <ul class="navi-list">
       </ul>
     </nav>
-
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
-    <section class="section navi-section"></section>
+    <main class="main">
+    </main>
 
     <script>
       mocha.run();
