@@ -1,5 +1,6 @@
-# Development folder
+# Development folders
 src/
+docs/
 
 # Coverage directory used by tools like istanbul
 coverage/
