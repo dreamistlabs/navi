@@ -79,7 +79,13 @@ describe('Navi', function() {
       removeElements(defaultSectionClass);
     });
   });
-
+  describe('with options argument that is not an object', function() {
+    it('throws an Argument Error', function() {
+      expect(function() {
+        new Navi(50);
+      }).to.throw(TypeError, 'must be an object');
+    });
+  });
   describe('with options argument', function() {
     var navi;
     var customTickClass     = 'custom-item';
@@ -166,5 +172,12 @@ describe('Navi', function() {
       assert.isTrue(ticks[index].classList.contains(currentTickClass));
     });
 
+    it('only one nav indicator should have the active tick class', async function() {
+      const ticks = await document.getElementsByClassName(defaultTickClass);
+      const results = await Array.from(ticks).filter(function(tick) {
+        return tick.classList.contains(currentTickClass);
+      });
+      assert.strictEqual(results.length, 1, 'Only one indicator should have the active class');
+    });
   });
 });

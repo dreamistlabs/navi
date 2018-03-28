@@ -1,6 +1,7 @@
 class Navi {
   constructor(opts = {}) {
     this.jqueryCheck(),
+    this.optionsCheck(opts),
     this.opts                   = opts,
     this.currentTickClass       = 'navi--current',
     this.endingValue            = this.opts['endingValue']   || 50,
@@ -18,7 +19,13 @@ class Navi {
 
   jqueryCheck() {
     if (!window.jQuery) {
-      throw new Error('Missing Library! In order for Navi to work, you need jQuery.');
+      throw new Error('Missing Library! In order for Navi to work, you need jQuery');
+    }
+  }
+
+  optionsCheck(options) {
+    if (!(options instanceof Object)) {
+      throw new TypeError('Type Error! Argument must be an object');
     }
   }
 
@@ -87,4 +94,4 @@ class Navi {
   }
 }
 
-// module.exports = Navi;
+module.exports = Navi;
