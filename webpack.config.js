@@ -1,11 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
+const jsonpackage = require('./package.json');
 
 module.exports = {
   entry: './src/navi.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'navi.min.js',
+    filename: `navi-${jsonpackage["version"]}.min.js`,
     libraryTarget: 'var',
     library: 'Navi'
   },

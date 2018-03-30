@@ -4,7 +4,7 @@
   "description": "",
   "homepage": "",
   "author": "Johnny Hu <heyitsjhu@gmail.com>",
-  "main": "./dist/nav.min.js",
+  "main": "./dist/navi-0.0.1.min.js",
   "repository": "github:dreamistlabs/navi",
   "bugs": "https://github.com/dreamistlabs/navi/issues",
   "scripts": {
