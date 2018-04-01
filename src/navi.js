@@ -1,3 +1,9 @@
+/**!
+ * Copyright (c) 2018 Dreamist Labs, Johnny Hu
+ * License: MIT
+ **/
+
+
 class Navi {
   constructor(opts = {}) {
     this.jqueryCheck(),
@@ -17,12 +23,18 @@ class Navi {
     this.executeScript();
   }
 
+  /*
+   * Check if jQuery is present.
+   */
   jqueryCheck() {
     if (!window.jQuery) {
       throw new Error('Missing Library! In order for Navi to work, you need jQuery');
     }
   }
 
+  /*
+   * Check whether or not options is an object.
+   */
   optionsCheck(options) {
     if (!(options instanceof Object)) {
       throw new TypeError('Type Error! Argument must be an object');
@@ -30,7 +42,7 @@ class Navi {
   }
 
   /*!
-   *
+   * Collect elements with the given class name. Throw an error if the collection comes back empty.
    */
   getCollection(name) {
     var className = '.' + name;
@@ -43,7 +55,8 @@ class Navi {
 
   executeScript() {
 
-    // need to figure out how to set active class on load. keep it dry!
+    // TODO: set active class on load. keep it dry!
+    // TODO: allow users to user data- attributes?
 
     $( document ).scroll(() => {
       const scrollPosition = $( window ).scrollTop();
