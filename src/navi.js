@@ -3,7 +3,7 @@ class Navi {
     this.jqueryCheck(),
     this.optionsCheck(opts),
     this.opts                   = opts,
-    this.currentTickClass       = 'navi--current',
+    this.activeTickClass        = this.opts['activeTickClass'] || 'navi--current',
     this.endingValue            = this.opts['endingValue']   || 50,
     this.startingValue          = this.opts['startingValue'] || 0;
     this.tickClass              = this.opts['ticks']         || 'navi-item',
@@ -29,6 +29,9 @@ class Navi {
     }
   }
 
+  /*!
+   *
+   */
   getCollection(name) {
     var className = '.' + name;
     if ( $( className ).length === 0 ) {
@@ -50,8 +53,7 @@ class Navi {
                 sectionHeight = this.sectionHeights[i],
                 nextSectionStart = sectionStart + sectionHeight,
                 inCurrentSection = sectionStart <= scrollPosition && scrollPosition < nextSectionStart,
-                tickShouldBeActive = inCurrentSection && !$( el ).hasClass(this.currentTickClass),
-                tickShouldntHaveClass = !inCurrentSection && $( el ).hasClass(this.currentTickClass);
+                tickShouldBeActive = inCurrentSection && !$( el ).hasClass(this.activeTickClass);
 
           // console.log(
           //   'idx:', idx,
@@ -74,9 +76,9 @@ class Navi {
 
           // add and remove active tick class
           if (tickShouldBeActive) {
-            $( el ).addClass(this.currentTickClass);
-          } else if (tickShouldntHaveClass) {
-            $( el ).removeClass(this.currentTickClass);
+            $( el ).addClass(this.activeTickClass);
+          } else if (!tickShouldBeActive) {
+            $( el ).removeClass(this.activeTickClass);
           }
 
           // ensures that the starting and ending radius values are
@@ -94,4 +96,4 @@ class Navi {
   }
 }
 
-module.exports = Navi;
+// module.exports = Navi;

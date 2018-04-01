@@ -21,8 +21,9 @@ function removeElements(className) {
 }
 
 describe('Navi', function() {
-  var defaultTickClass    = 'navi-item';
-  var defaultSectionClass = 'navi-section';
+  var defaultActiveTickClass = 'navi--current';
+  var defaultTickClass       = 'navi-item';
+  var defaultSectionClass    = 'navi-section';
 
   describe('if jQuery is missing', function() {
     before(function() {
@@ -55,6 +56,9 @@ describe('Navi', function() {
     it('tick class should default to ' + defaultTickClass, function() {
       assert.strictEqual(navi.tickClass, defaultTickClass);
     });
+    it('active tick class should default to ' + defaultActiveTickClass, function() {
+      assert.strictEqual(navi.activeTickClass, defaultActiveTickClass);
+    });
     it('starting value should default to 0', function() {
       assert.strictEqual(navi.startingValue, 0);
     });
@@ -79,6 +83,7 @@ describe('Navi', function() {
       removeElements(defaultSectionClass);
     });
   });
+
   describe('with options argument that is not an object', function() {
     it('throws an Argument Error', function() {
       expect(function() {
@@ -86,10 +91,10 @@ describe('Navi', function() {
       }).to.throw(TypeError, 'must be an object');
     });
   });
+
   describe('with options argument', function() {
-    var navi;
-    var customTickClass     = 'custom-item';
-    var customSectionClass  = 'custom-section';
+    var customTickClass       = 'custom-item';
+    var customSectionClass    = 'custom-section';
 
     describe('and a custom tick and section class that exist in the DOM', function() {
       before(function() {
@@ -125,6 +130,7 @@ describe('Navi', function() {
         removeElements(customSectionClass);
       });
     });
+
     describe('and a custom tick and section class that DOES NOT exist in the DOM', function() {
       before(function() {
         generateElements('section', defaultSectionClass, 'main');
@@ -153,10 +159,31 @@ describe('Navi', function() {
         removeElements(defaultSectionClass);
       });
     });
+
+    describe('and a custom active tick class', function() {
+      var navi;
+      var customActiveTickClass = 'navi--active';
+
+      before(function() {
+        generateElements('section', defaultSectionClass, 'main');
+        generateElements('indicators', defaultTickClass, 'navi-list');
+        navi = new Navi({
+          activeTickClass: customActiveTickClass
+        });
+      });
+
+      it('active tick class should custom class, ' + customActiveTickClass, function() {
+        assert.strictEqual(navi.activeTickClass, customActiveTickClass);
+      });
+
+      after(function() {
+        removeElements(defaultTickClass);
+        removeElements(defaultSectionClass);
+      });
+    });
   });
 
-  describe('when window scroll position is within a navi section', function() {
-    var currentTickClass = 'navi--current';
+  describe('when browser window is scrolled to a navi section', function() {
     var index = Math.floor(Math.random() * 7);
 
     before(async function() {
@@ -167,15 +194,15 @@ describe('Navi', function() {
       await window.scrollTo(0, sectionStartPosition);
     });
 
-    it('the active tick class is added the corresponding nav indicator', async function() {
+    it('the corresponding nav indicator should have the active tick class', async function() {
       const ticks = await document.getElementsByClassName(defaultTickClass);
-      assert.isTrue(ticks[index].classList.contains(currentTickClass));
+      assert.isTrue(ticks[index].classList.contains(defaultActiveTickClass));
     });
 
     it('only one nav indicator should have the active tick class', async function() {
       const ticks = await document.getElementsByClassName(defaultTickClass);
       const results = await Array.from(ticks).filter(function(tick) {
-        return tick.classList.contains(currentTickClass);
+        return tick.classList.contains(defaultActiveTickClass);
       });
       assert.strictEqual(results.length, 1, 'Only one indicator should have the active class');
     });
