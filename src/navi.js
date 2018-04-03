@@ -10,10 +10,12 @@ class Navi {
     this.optionsCheck(opts),
     this.opts                   = opts,
     this.activeTickClass        = this.opts['activeTickClass'] || 'navi--current',
-    this.endingValue            = this.opts['endingValue']   || 50,
-    this.startingValue          = this.opts['startingValue'] || 0;
-    this.tickClass              = this.opts['ticks']         || 'navi-item',
-    this.sectionClass           = this.opts['sections']      || 'navi-section',
+    this.animationName          = this.opts['animationName']   || null,
+    this.customAnimation        = this.opts['customAnimation'] || null,
+    this.endingValue            = this.opts['endingValue']     || 50,
+    this.startingValue          = this.opts['startingValue']   || 0,
+    this.sectionClass           = this.opts['sections']        || 'navi-section',
+    this.tickClass              = this.opts['ticks']           || 'navi-item',
 
     this.tickCollection         = this.getCollection(this.tickClass);
     this.sectionCollection      = this.getCollection(this.sectionClass);
@@ -37,7 +39,13 @@ class Navi {
    */
   optionsCheck(options) {
     if (!(options instanceof Object)) {
-      throw new TypeError('Type Error! Argument must be an object');
+      throw new TypeError('Type Error! The options argument must be an object');
+    }
+    if (options['customAnimation'] && !(options['customAnimation'] instanceof Object)) {
+      throw new TypeError('Type Error! The customAnimation property must be an object');
+    }
+    if (options['animation'] && !(options['animation'] instanceof String)) {
+      throw new TypeError('Type Error! The animation property must be an string');
     }
   }
 

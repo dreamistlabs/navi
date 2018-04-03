@@ -25,12 +25,12 @@ describe('Navi', function() {
   var defaultTickClass       = 'navi-item';
   var defaultSectionClass    = 'navi-section';
 
-  describe('if jQuery is missing', function() {
+  describe('checks if jquery is loaded', function() {
     before(function() {
       window.jQuery = null;
     });
 
-    it('throws an error', function() {
+    it('and throws an error if it isn\'t', function() {
       expect(function() {
         new Navi();
       }).to.throw(Error, 'Missing Library');
@@ -41,7 +41,7 @@ describe('Navi', function() {
     });
   });
 
-  describe('with no options argument', function() {
+  describe('a new Navi instance with no options argument', function() {
     var navi;
 
     before(function() {
@@ -50,45 +50,34 @@ describe('Navi', function() {
       navi = new Navi();
     });
 
-    it('section class should default to ' + defaultSectionClass, function() {
-      assert.strictEqual(navi.sectionClass, defaultSectionClass);
-    });
-    it('tick class should default to ' + defaultTickClass, function() {
-      assert.strictEqual(navi.tickClass, defaultTickClass);
-    });
-    it('active tick class should default to ' + defaultActiveTickClass, function() {
+    it('has activeTickClass default to ' + defaultActiveTickClass, function() {
       assert.strictEqual(navi.activeTickClass, defaultActiveTickClass);
     });
-    it('starting value should default to 0', function() {
-      assert.strictEqual(navi.startingValue, 0);
+    it('has animationName default to null', function() {
+      assert.strictEqual(navi.animationName, null);
     });
-    it('ending value should default to 50', function() {
-      assert.strictEqual(navi.endingValue, 50);
+    it('has customAnimation default to null', function() {
+      assert.strictEqual(navi.customAnimation, null);
     });
-    it('tick collection should not be empty', function() {
+    it('has sectionClass default to ' + defaultSectionClass, function() {
+      assert.strictEqual(navi.sectionClass, defaultSectionClass);
+    });
+    it('the collection of navi ticks should not be empty', function() {
       assert.notStrictEqual(navi.tickCollection.length, 0);
     });
-    it('section collection should not be empty', function() {
+    it('the collection of navi sections collection should not be empty', function() {
       assert.notStrictEqual(navi.sectionCollection.length, 0);
     });
-    it('collection of section start positions should not be empty', function() {
+    it('the collection of navi section start positions should not be empty', function() {
       assert.notStrictEqual(navi.sectionStartPositions.length, 0);
     });
-    it('collection of section heights should not be empty', function() {
+    it('the collection of navi section heights should not be empty', function() {
       assert.notStrictEqual(navi.sectionHeights.length, 0);
     });
 
     after(function() {
       removeElements(defaultTickClass);
       removeElements(defaultSectionClass);
-    });
-  });
-
-  describe('with options argument that is not an object', function() {
-    it('throws an Argument Error', function() {
-      expect(function() {
-        new Navi(50);
-      }).to.throw(TypeError, 'must be an object');
     });
   });
 
@@ -205,6 +194,24 @@ describe('Navi', function() {
         return tick.classList.contains(defaultActiveTickClass);
       });
       assert.strictEqual(results.length, 1, 'Only one indicator should have the active class');
+    });
+  });
+
+  describe('Error Handling', function() {
+    describe('an options argument that isn\'t an object', function() {
+      it('throws an Argument Error', function() {
+        expect(function() {
+          new Navi(50);
+        }).to.throw(TypeError, 'must be an object');
+      });
+    });
+
+    describe('a customAnimation value that isn\'t an object', function() {
+      it('throws an Argument Error', function() {
+        expect(function() {
+          new Navi({ customAnimation: 'notAnObject' });
+        }).to.throw(TypeError, 'must be an object');
+      });
     });
   });
 });
