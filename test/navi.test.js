@@ -191,14 +191,19 @@ describe('Navi', function() {
       before(async function() {
         generateElements('section', defaultSectionClass, 'main');
         generateElements('indicators', defaultTickClass, 'navi-list');
-        navi = await new Navi();
+        navi = await new Navi({
+          animationName: 'hello',
+          customAnimation: {
+            'border-radius': ['0%', '50%']
+          }
+        });
         var sectionStartPosition = await navi.sectionStartPositions[index];
-        // console.log(sectionStartPosition);
-        await window.scrollTo(0, sectionStartPosition);
+        window.scrollTo(0, sectionStartPosition);
       });
 
       it('the corresponding nav indicator should have the active tick class', async function() {
-        const ticks = await document.getElementsByClassName(defaultTickClass);
+        var ticks = await document.getElementsByClassName(defaultTickClass);
+        console.log(ticks[index], index);
         assert.isTrue(ticks[index].classList.contains(defaultActiveTickClass));
       });
 

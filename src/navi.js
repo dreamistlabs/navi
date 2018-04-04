@@ -51,7 +51,7 @@ class Navi {
       } else {
         const keys = Object.keys(options['customAnimation']);
         for (let i = 0; i < keys.length; i++) {
-          if (keys[i] !== 'start' && keys[i] !== 'finish') {
+          if (keys[i] !== 'border-radius' && keys[i] !== 'background-color') {
             throw new ReferenceError('Unrecognized Key! ' + keys[i] + ' is not a valid customAnimation key. Did you mean "start" or "finish"?');
           }
         }
@@ -93,34 +93,52 @@ class Navi {
 
       if (sectionIsActive) {
         const correspondingTickElement = $( this.tickCollection[i] );
+        // need a way to properly calculate the last navi section if
+        // it's the last section on the page because then the bottom
+        // of the section will never reach the top of the page/window.
+        const portionOfSectionScrolled = (scrollPosition - sectionStart) / sectionHeight;
+
         if( !correspondingTickElement.hasClass(this.activeTickClass) ) {
           this.tickCollection.removeClass(this.activeTickClass);
           correspondingTickElement.addClass(this.activeTickClass);
-          break;
+          console.log('class applied');
         }
+        console.log('afterwards,', i);
+        // execute animation on current nav tick
+
+        if (this.customAnimation) {
+          this.executeCustomAnimation(this.customAnimation, portionOfSectionScrolled);
+        }
+        break;
       }
     }
   }
 
-  initialize() {
-    if (false) {
-      const startEndValueRange = this.endingValue - this.startingValue;
-      const percentageOfDistanceScrolled = (scrollPosition - this.sectionStartPositions[i]) / sectionHeight;
+  executeCustomAnimation(customData, multiplier) {
+    console.log('yay if!', multiplier);
+    for (var prop in customData) {
+      console.log(prop, customData[prop]);
+      customData[prop].map(function(value) {
+        // console.log(value.match(/(\D)/));
+        // console.log(parseInt(value));
+      })
 
-     // change border radius
-      const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
-      $( el ).css('border-radius', radius + '%');
     }
+    // const startEndValueRange = this.endingValue - this.startingValue;
+
+    // change border radius
+    // const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
+    // $( el ).css('border-radius', radius + '%');
 
     // ensures that the starting and ending radius values are
     // properly set when scrolling out of a section in cases
     // where a user might scroll faster than the script can keep up.
-    if (!inCurrentSection && scrollPosition < sectionStart) {
-      $( el ).css('border-radius', this.startingValue+'%');
-    }
-    if (!inCurrentSection && scrollPosition > nextSectionStart) {
-      $( el ).css('border-radius', this.endingValue+'%');
-    }
+    // if (!inCurrentSection && scrollPosition < sectionStart) {
+    //   $( el ).css('border-radius', this.startingValue+'%');
+    // }
+    // if (!inCurrentSection && scrollPosition > nextSectionStart) {
+    //   $( el ).css('border-radius', this.endingValue+'%');
+    // }
   }
 }
 
