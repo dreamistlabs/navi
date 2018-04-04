@@ -3,6 +3,8 @@
  * License: MIT
  **/
 
+// TODO: allow users to user data- attributes?
+
 class Navi {
   constructor(opts = {}) {
     this.jqueryCheck(),
@@ -50,7 +52,6 @@ class Navi {
         const keys = Object.keys(options['customAnimation']);
         for (let i = 0; i < keys.length; i++) {
           if (keys[i] !== 'start' && keys[i] !== 'finish') {
-            console.log( keys[i] );
             throw new ReferenceError('Unrecognized Key! ' + keys[i] + ' is not a valid customAnimation key. Did you mean "start" or "finish"?');
           }
         }
@@ -71,58 +72,56 @@ class Navi {
   }
 
   executeScript() {
-    // TODO: set active class on load. keep it dry!
-    // TODO: allow users to user data- attributes?
+    let windowPosition = window.pageYOffset;
+
+    $( document ).ready(() => {
+      this.setActiveTick(windowPosition);
+    });
+
     $( document ).scroll(() => {
-      const scrollPosition = $( window ).scrollTop();
-
-      this.tickCollection.each((i, el) => {
-        const sectionStart = this.sectionStartPositions[i],
-              sectionHeight = this.sectionHeights[i],
-              nextSectionStart = sectionStart + sectionHeight,
-              inCurrentSection = sectionStart <= scrollPosition && scrollPosition < nextSectionStart,
-              tickShouldBeActive = inCurrentSection && !$( el ).hasClass(this.activeTickClass);
-
-        // console.log(
-        //   'idx:', idx,
-        //   'isCurrent:', inCurrentSection
-        // );
-
-        if (inCurrentSection) {
-          // console.log(
-          //   'currentStart:', sectionStart,
-          //   'scrollPos:', scrollPosition,
-          //   'nextStart:', nextSectionStart
-          // );
-          const startEndValueRange = this.endingValue - this.startingValue;
-          const percentageOfDistanceScrolled = (scrollPosition - this.sectionStartPositions[i]) / sectionHeight;
-
-         // change border radius
-          const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
-          $( el ).css('border-radius', radius + '%');
-        }
-
-        // add and remove active tick class
-        if (tickShouldBeActive) {
-          $( el ).addClass(this.activeTickClass);
-        } else if (!tickShouldBeActive) {
-          $( el ).removeClass(this.activeTickClass);
-        }
-
-        // ensures that the starting and ending radius values are
-        // properly set when scrolling out of a section in cases
-        // where a user might scroll faster than the script can keep up.
-        if (!inCurrentSection && scrollPosition < sectionStart) {
-          $( el ).css('border-radius', this.startingValue+'%');
-        }
-        if (!inCurrentSection && scrollPosition > nextSectionStart) {
-          $( el ).css('border-radius', this.endingValue+'%');
-        }
-
-      });
+      windowPosition = window.pageYOffset;
+      this.setActiveTick(windowPosition);
     });
   }
 
+  setActiveTick(scrollPosition) {
+    for (let i = 0; i < this.sectionStartPositions.length; i++) {
+      const sectionStart = this.sectionStartPositions[i];
+      const sectionHeight = this.sectionHeights[i];
+      const nextSectionStart = this.sectionStartPositions[i+1] || sectionStart + sectionHeight;
+      const sectionIsActive = sectionStart <= scrollPosition && scrollPosition < nextSectionStart;
+
+      if (sectionIsActive) {
+        const correspondingTickElement = $( this.tickCollection[i] );
+        if( !correspondingTickElement.hasClass(this.activeTickClass) ) {
+          this.tickCollection.removeClass(this.activeTickClass);
+          correspondingTickElement.addClass(this.activeTickClass);
+          break;
+        }
+      }
+    }
+  }
+
+  initialize() {
+    if (false) {
+      const startEndValueRange = this.endingValue - this.startingValue;
+      const percentageOfDistanceScrolled = (scrollPosition - this.sectionStartPositions[i]) / sectionHeight;
+
+     // change border radius
+      const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
+      $( el ).css('border-radius', radius + '%');
+    }
+
+    // ensures that the starting and ending radius values are
+    // properly set when scrolling out of a section in cases
+    // where a user might scroll faster than the script can keep up.
+    if (!inCurrentSection && scrollPosition < sectionStart) {
+      $( el ).css('border-radius', this.startingValue+'%');
+    }
+    if (!inCurrentSection && scrollPosition > nextSectionStart) {
+      $( el ).css('border-radius', this.endingValue+'%');
+    }
+  }
 }
 
 // module.exports = Navi;
