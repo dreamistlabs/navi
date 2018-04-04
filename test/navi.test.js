@@ -224,8 +224,8 @@ describe('Navi', function() {
     });
     it('throws an error if the customAnimation property\'s keys don\'t include: ' + acceptableKeys[0] + ', ' + acceptableKeys[1], function() {
       expect(function() {
-        new Navi({ customAnimation: { notStart: {}, notFinish: {}} });
-      }).to.throw(TypeError, 'must be an object');
+        new Navi({ customAnimation: { notStart: {}, finish: {}} });
+      }).to.throw(ReferenceError, 'Unrecognized Key!');
     });
   });
 });

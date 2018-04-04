@@ -44,19 +44,17 @@ class Navi {
       throw new TypeError('Type Error! The animation property must be an string');
     }
     if (options['customAnimation']) {
-      const keys = Object.keys(options['customAnimation']);
-
       if(!(options['customAnimation'] instanceof Object)) {
         throw new TypeError('Type Error! The customAnimation property must be an object');
+      } else {
+        const keys = Object.keys(options['customAnimation']);
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i] !== 'start' && keys[i] !== 'finish') {
+            console.log( keys[i] );
+            throw new ReferenceError('Unrecognized Key! ' + keys[i] + ' is not a valid customAnimation key. Did you mean "start" or "finish"?');
+          }
+        }
       }
-      // console.log( Object.keys(options['customAnimation']) );
-      // for (let i = 0; i < keys.length; i++) {
-
-      // }
-      // if (Object.keys(options['customAnimation']).includes('start')) {
-      //   console.log('yay');
-      // }
-
     }
   }
 
