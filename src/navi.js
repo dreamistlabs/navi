@@ -45,18 +45,18 @@ class Navi {
     if (options['animation'] && !(options['animation'] instanceof String)) {
       throw new TypeError('Type Error! The animation property must be an string');
     }
-    if (options['customAnimation']) {
-      if(!(options['customAnimation'] instanceof Object)) {
-        throw new TypeError('Type Error! The customAnimation property must be an object');
-      } else {
-        const keys = Object.keys(options['customAnimation']);
-        for (let i = 0; i < keys.length; i++) {
-          if (keys[i] !== 'border-radius' && keys[i] !== 'background-color') {
-            throw new ReferenceError('Unrecognized Key! ' + keys[i] + ' is not a valid customAnimation key. Did you mean "start" or "finish"?');
-          }
-        }
-      }
-    }
+    // if (options['customAnimation']) {
+    //   if(!(options['customAnimation'] instanceof Object)) {
+    //     throw new TypeError('Type Error! The customAnimation property must be an object');
+    //   } else {
+    //     const keys = Object.keys(options['customAnimation']);
+    //     for (let i = 0; i < keys.length; i++) {
+    //       if (keys[i] !== 'border-radius' && keys[i] !== 'background-color') {
+    //         throw new ReferenceError('Unrecognized Key! ' + keys[i] + ' is not a valid customAnimation key. Did you mean "start" or "finish"?');
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   /*!
