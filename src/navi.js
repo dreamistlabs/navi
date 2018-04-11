@@ -5,7 +5,7 @@
 
 // TODO: allow users to user data- attributes?
 
-class Navi {
+export class Navi {
   constructor(opts = {}) {
     this.jqueryCheck(),
     this.optionsCheck(opts),
@@ -141,5 +141,3 @@ class Navi {
     // }
   }
 }
-
-// module.exports = Navi;
