@@ -7,8 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: `navi-${jsonpackage["version"]}.min.js`,
-    libraryTarget: 'var',
-    library: 'Navi'
+    libraryTarget: 'umd'
   },
   module: {
     rules: [
