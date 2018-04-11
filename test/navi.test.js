@@ -25,24 +25,6 @@ describe('Navi', function() {
   var defaultTickClass       = 'navi-item';
   var defaultSectionClass    = 'navi-section';
 
-  var acceptableKeys = ['start', 'finish'];
-
-  describe('checks if jquery is loaded', function() {
-    before(function() {
-      window.jQuery = null;
-    });
-
-    it('and throws an error if it isn\'t', function() {
-      expect(function() {
-        new Navi();
-      }).to.throw(Error, 'Missing Library');
-    });
-
-    after(function() {
-      window.jQuery = $;
-    });
-  });
-
   describe('Properties', function() {
     describe('with no options argument', function() {
       var navi;
