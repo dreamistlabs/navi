@@ -165,6 +165,7 @@ describe('Navi', function() {
           animationName: 'hello'
         });
         var sectionStartPosition = await navi.sectionStartPositions[index];
+        window.scrollTo(0, 100);
         window.scrollTo(0, sectionStartPosition);
       });
 

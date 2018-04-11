@@ -21,9 +21,8 @@ export class Navi {
     this.sectionCollection      = this.getCollection(this.sectionClass);
 
     this.sectionStartPositions  = Array.from(this.sectionCollection).map((section, i) => section.offsetTop );
-    this.sectionHeights         = Array.from(this.sectionCollection).map((section, i) => section.outerHeight );
+    this.sectionHeights         = Array.from(this.sectionCollection).map((section, i) => section.offsetHeight );
     this.executeScript();
-
   }
 
   /*
