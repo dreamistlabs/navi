@@ -11,7 +11,8 @@
     "build": "webpack",
     "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/* --require babel-register",
     "prepublishOnly": "npm run build",
-    "test": "open test/navi-test.html"
+    "test": "open test/navi-test.html",
+    "watch": "webpack --watch"
   },
   "license": "MIT",
   "devDependencies": {
