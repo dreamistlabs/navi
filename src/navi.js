@@ -10,19 +10,19 @@
 export class Navi {
   constructor(opts = {}) {
     this.optionsCheck(opts),
-    this.opts                   = opts,
-    this.activeTickClass        = this.opts['activeTickClass'] || 'navi--current',
-    this.animationName          = this.opts['animationName']   || null,
-    this.customAnimation        = this.opts['customAnimation'] || null,
-    this.listClass              = this.opts['listClass']       || 'navi-list',
-    this.sectionClass           = this.opts['sectionClass']    || 'navi-section',
-    this.tickClass              = this.opts['tickClass']       || 'navi-item',
+      this.opts = opts,
+      this.activeTickClass = this.opts['activeTickClass'] || 'navi--current',
+      this.animationName = this.opts['animationName'] || null,
+      this.customAnimation = this.opts['customAnimation'] || null,
+      this.listClass = this.opts['listClass'] || 'navi-list',
+      this.sectionClass = this.opts['sectionClass'] || 'navi-section',
+      this.tickClass = this.opts['tickClass'] || 'navi-item',
 
-    this.tickCollection         = this.getCollection(this.tickClass);
-    this.sectionCollection      = this.getCollection(this.sectionClass);
+      this.tickCollection = this.getCollection(this.tickClass);
+    this.sectionCollection = this.getCollection(this.sectionClass);
 
-    this.sectionStartPositions  = Array.from(this.sectionCollection).map((section, i) => section.offsetTop );
-    this.sectionHeights         = Array.from(this.sectionCollection).map((section, i) => section.offsetHeight );
+    this.sectionStartPositions = Array.from(this.sectionCollection).map((section, i) => section.offsetTop);
+    this.sectionHeights = Array.from(this.sectionCollection).map((section, i) => section.offsetHeight);
     this.executeScript();
   }
 
@@ -56,90 +56,81 @@ export class Navi {
   getCollection(name) {
     const collection = document.getElementsByClassName(name);
 
-    if ( collection.length === 0 ) {
-      throw new Error('Missing Collection! Navi was unable to collect elements with class ' + name );
+    if (collection.length === 0) {
+      throw new Error('Missing Collection! Navi was unable to collect elements with class ' + name);
     } else {
       return collection;
     }
   }
 
   executeScript() {
-    if (!document.querySelector('.'+this.listClass)) {
-      throw new Error ('Element Not Found! Navi was unable to find an element with class ' + this.listClass);
+    if (!document.querySelector('.' + this.listClass)) {
+      throw new Error('Element Not Found! Navi was unable to find an element with class ' + this.listClass);
     }
-    let windowPosition = window.pageYOffset;
 
-    document.addEventListener('DCMContentLoaded', function() {
-      this.setActiveTick(windowPosition);
+    document.addEventListener('DCMContentLoaded', function () {
+      this.setActiveTick();
     }.bind(this));
 
-    document.addEventListener('scroll', function() {
-      windowPosition = window.pageYOffset;
-      this.setActiveTick(windowPosition);
+    document.addEventListener('scroll', function () {
+      this.setActiveTick();
     }.bind(this));
 
     if (this.animationName) {
-      this.handleAnimation(this.animationName, windowPosition);
+      document.getElementsByClassName(this.listClass)[0].classList.add(this.animationName);
     }
   }
 
-  setActiveTick(scrollPosition) {
+  setActiveTick() {
+    const scrollPosition = window.pageYOffset;
+    
     for (let i = 0; i < this.sectionStartPositions.length; i++) {
-      const sectionStart = this.sectionStartPositions[i];
-      const sectionHeight = this.sectionHeights[i];
-      const nextSectionStart = this.sectionStartPositions[i+1] || sectionStart + sectionHeight;
-      const sectionIsActive = sectionStart <= scrollPosition && scrollPosition < nextSectionStart;
+      const sectionStart      = this.sectionStartPositions[i],
+            sectionHeight     = this.sectionHeights[i],
+            nextSectionStart  = this.sectionStartPositions[i + 1] || sectionStart + sectionHeight,
+            sectionIsActive   = sectionStart <= scrollPosition && scrollPosition < nextSectionStart,
+            startingValue = 0,
+            endingValue   = 50,
+            correspondingTickElement = this.tickCollection[i];
 
       if (sectionIsActive) {
-        const correspondingTickElement = this.tickCollection[i];
         // need a way to properly calculate the last navi section if
         // it's the last section on the page because then the bottom
         // of the section will never reach the top of the page/window.
         const portionOfSectionScrolled = (scrollPosition - sectionStart) / sectionHeight;
 
-        if( !correspondingTickElement.classList.contains(this.activeTickClass) ) {
+        /*!
+         * Add active tick class.
+         */
+        if (!correspondingTickElement.classList.contains(this.activeTickClass)) {
           for (let i = 0; i < this.tickCollection.length; i++) {
             this.tickCollection[i].classList.remove(this.activeTickClass);
           }
           correspondingTickElement.classList.add(this.activeTickClass);
-          console.log('class applied');
         }
-        console.log('afterwards,', i);
-        // execute animation on current nav tick
 
-        // if (this.customAnimation) {
-        //   this.executeCustomAnimation(this.customAnimation, portionOfSectionScrolled);
-        // }
-        break;
+        // execute animation on current nav tick
+        console.log(correspondingTickElement);
+        if (this.animationName) {
+          const startEndValueRange = endingValue - startingValue,
+          radius =  startingValue + startEndValueRange * portionOfSectionScrolled;
+          correspondingTickElement.setAttribute('style', `border-radius: ${radius}%`);
+        }
+      }
+      
+      if (this.animationName && correspondingTickElement) {
+        // ensures that the starting and ending radius values are
+        // properly set when scrolling out of a section in cases
+        // where a user might scroll faster than the script can keep up.
+        if (!sectionIsActive && scrollPosition < sectionStart) {
+          console.log(correspondingTickElement);
+          correspondingTickElement.setAttribute('style', `border-radius: ${startingValue}%`);
+        }
+        if (!sectionIsActive && scrollPosition > nextSectionStart) {
+          correspondingTickElement.setAttribute('style', `border-radius: ${endingValue}%`);
+        }
       }
     }
-  }
-
-  handleAnimation(className, scrollPosition) {
-    document.getElementsByClassName(this.listClass)[0]
-            .classList
-            .add(className);
-
-    switch (className) {
-      case 'custom-list':
-        $( el ).css('border-radius', radius + '%');
-          if (!inCurrentSection && scrollPosition < sectionStart) {
-            $( el ).css('border-radius', this.startingValue+'%');
-          }
-          if (!inCurrentSection && scrollPosition > nextSectionStart) {
-            $( el ).css('border-radius', this.endingValue+'%');
-          }
-          this.setAnimation(scrollPosition);
-        break;
-      default:
-        return;
-    }
-  }
-
-  setAnimation(property, startValue, endValue, scrollPosition) {
-    const portionOfSectionScrolled = (scrollPosition - sectionStart) / sectionHeight;
-    const range = endValue - startValue;
-    const radius =  startValue + range * portionOfSectionScrolled;
   }
   // executeCustomAnimation(customData, multiplier) {
   //   console.log('yay if!', multiplier);
@@ -151,20 +142,4 @@ export class Navi {
   //     })
 
   //   }
-    // const startEndValueRange = this.endingValue - this.startingValue;
-
-    // change border radius
-    // const radius =  this.startingValue + startEndValueRange * percentageOfDistanceScrolled;
-    // $( el ).css('border-radius', radius + '%');
-
-    // ensures that the starting and ending radius values are
-    // properly set when scrolling out of a section in cases
-    // where a user might scroll faster than the script can keep up.
-    // if (!inCurrentSection && scrollPosition < sectionStart) {
-    //   $( el ).css('border-radius', this.startingValue+'%');
-    // }
-    // if (!inCurrentSection && scrollPosition > nextSectionStart) {
-    //   $( el ).css('border-radius', this.endingValue+'%');
-    // }
-  // }
 }

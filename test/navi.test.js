@@ -82,7 +82,7 @@ describe('Navi', function() {
 
     describe('with options argument containing properties that exist in the DOM', function() {
       var customActiveTickClass = 'custom-tick--current';
-      var customAnimationName   = 'custom-animation';
+      var customAnimationName   = 'custom--animation';
       var customListClass       = 'custom-list';
       var customSectionClass    = 'custom-section';
       var customTickClass       = 'custom-item';
@@ -186,6 +186,8 @@ describe('Navi', function() {
   });
 
   describe('Behavior', function() {
+    var customAnimationName   = 'custom--animation';
+
     describe('when browser window is scrolled to a navi section', function() {
       var index = Math.floor(Math.random() * 7);
 
@@ -193,7 +195,7 @@ describe('Navi', function() {
         generateElements('section', defaultSectionClass, 'main');
         generateElements('indicators', defaultTickClass, 'navi-list');
         navi = await new Navi({
-          animationName: 'hello'
+          animationName: customAnimationName
         });
         var sectionStartPosition = await navi.sectionStartPositions[index];
         window.scrollTo(0, 100);
@@ -202,7 +204,6 @@ describe('Navi', function() {
 
       it('the corresponding nav indicator should have the active tick class', async function() {
         var ticks = await document.getElementsByClassName(defaultTickClass);
-        console.log(ticks[index], index);
         assert.isTrue(ticks[index].classList.contains(defaultActiveTickClass));
       });
 
