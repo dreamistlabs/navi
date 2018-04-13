@@ -14,8 +14,9 @@ export class Navi {
     this.activeTickClass        = this.opts['activeTickClass'] || 'navi--current',
     this.animationName          = this.opts['animationName']   || null,
     this.customAnimation        = this.opts['customAnimation'] || null,
-    this.sectionClass           = this.opts['sections']        || 'navi-section',
-    this.tickClass              = this.opts['ticks']           || 'navi-item',
+    this.listClass              = this.opts['listClass']       || 'navi-list',
+    this.sectionClass           = this.opts['sectionClass']    || 'navi-section',
+    this.tickClass              = this.opts['tickClass']       || 'navi-item',
 
     this.tickCollection         = this.getCollection(this.tickClass);
     this.sectionCollection      = this.getCollection(this.sectionClass);
@@ -63,6 +64,9 @@ export class Navi {
   }
 
   executeScript() {
+    if (!document.querySelector('.'+this.listClass)) {
+      throw new Error ('Element Not Found! Navi was unable to find an element with class ' + this.listClass);
+    }
     let windowPosition = window.pageYOffset;
 
     document.addEventListener('DCMContentLoaded', function() {
@@ -73,6 +77,10 @@ export class Navi {
       windowPosition = window.pageYOffset;
       this.setActiveTick(windowPosition);
     }.bind(this));
+
+    if (this.animationName) {
+      this.handleAnimation(this.animationName, windowPosition);
+    }
   }
 
   setActiveTick(scrollPosition) {
@@ -107,6 +115,32 @@ export class Navi {
     }
   }
 
+  handleAnimation(className, scrollPosition) {
+    document.getElementsByClassName(this.listClass)[0]
+            .classList
+            .add(className);
+
+    switch (className) {
+      case 'custom-list':
+        $( el ).css('border-radius', radius + '%');
+          if (!inCurrentSection && scrollPosition < sectionStart) {
+            $( el ).css('border-radius', this.startingValue+'%');
+          }
+          if (!inCurrentSection && scrollPosition > nextSectionStart) {
+            $( el ).css('border-radius', this.endingValue+'%');
+          }
+          this.setAnimation(scrollPosition);
+        break;
+      default:
+        return;
+    }
+  }
+
+  setAnimation(property, startValue, endValue, scrollPosition) {
+    const portionOfSectionScrolled = (scrollPosition - sectionStart) / sectionHeight;
+    const range = endValue - startValue;
+    const radius =  startValue + range * portionOfSectionScrolled;
+  }
   // executeCustomAnimation(customData, multiplier) {
   //   console.log('yay if!', multiplier);
   //   for (var prop in customData) {

@@ -2,13 +2,20 @@ var assert = chai.assert;
 var expect = chai.expect;
 
 function generateElements(type, className, parentContainer) {
-  var parent = document.getElementsByClassName(parentContainer)[0];
-  var el = type === 'section' ? 'section' : 'li';
+  if (type === 'section') {
+    var el = 'section';    
+    var parent = document.querySelector(parentContainer);
+  } else {
+    var el = 'li';
+    var container = document.querySelector('.navi-nav');
+    var parent = document.createElement('ul');
+    parent.classList.add(parentContainer);
+    container.appendChild(parent);
+  }
   var collection = [];
 
   for (var i = 0; i < 7; i++) {
     var element = document.createElement(el);
-
     element.classList.add(className);
     parent.appendChild(element);
   }
@@ -22,16 +29,17 @@ function removeElements(className) {
 
 describe('Navi', function() {
   var defaultActiveTickClass = 'navi--current';
-  var defaultTickClass       = 'navi-item';
+  var defaultListClass       = 'navi-list';
   var defaultSectionClass    = 'navi-section';
+  var defaultTickClass       = 'navi-item';
 
   describe('Properties', function() {
     describe('with no options argument', function() {
       var navi;
 
       before(function() {
-        generateElements('indicators', defaultTickClass, 'navi-list');
         generateElements('section', defaultSectionClass, 'main');
+        generateElements('indicators', defaultTickClass, defaultListClass);
         navi = new Navi();
       });
 
@@ -43,6 +51,9 @@ describe('Navi', function() {
       });
       it('has customAnimation default to null', function() {
         assert.strictEqual(navi.customAnimation, null);
+      });
+      it('has listClass default to ' + defaultListClass, function() {
+        assert.strictEqual(navi.listClass, defaultListClass);
       });
       it('has sectionClass default to ' + defaultSectionClass, function() {
         assert.strictEqual(navi.sectionClass, defaultSectionClass);
@@ -64,7 +75,7 @@ describe('Navi', function() {
       });
 
       after(function() {
-        removeElements(defaultTickClass);
+        removeElements(defaultListClass);
         removeElements(defaultSectionClass);
       });
     });
@@ -72,17 +83,19 @@ describe('Navi', function() {
     describe('with options argument containing properties that exist in the DOM', function() {
       var customActiveTickClass = 'custom-tick--current';
       var customAnimationName   = 'custom-animation';
-      var customTickClass       = 'custom-item';
+      var customListClass       = 'custom-list';
       var customSectionClass    = 'custom-section';
+      var customTickClass       = 'custom-item';
 
       before(function() {
         generateElements('section', customSectionClass, 'main');
-        generateElements('indicators', customTickClass, 'navi-list');
+        generateElements('indicators', customTickClass, customListClass);
         navi = new Navi({
           activeTickClass: customActiveTickClass,
           animationName: customAnimationName,
-          ticks: customTickClass,
-          sections: customSectionClass
+          listClass: customListClass,
+          sectionClass: customSectionClass,
+          tickClass: customTickClass
         });
       });
 
@@ -92,11 +105,12 @@ describe('Navi', function() {
       it('the animationName property should equal the given custom class: ' + customAnimationName, function() {
         assert.strictEqual(navi.animationName, customAnimationName);
       });
-      it('the tickClass property should equal the given custom class: ' + customTickClass, function() {
-        assert.strictEqual(navi.tickClass, customTickClass);
+      it('the animationName should be applied to the list element', function() {
+        let listElement = document.getElementsByClassName(navi.listClass)[0];
+        assert.isTrue(listElement.classList.contains(navi.animationName), `${listElement.classList} should include ${navi.animationName}`);
       });
-      it('the tickCollection property should not be empty', function() {
-        assert.notStrictEqual(navi.tickCollection.length, 0);
+      it('the listClass property should equal the given custom class: ' + customListClass, function() {
+        assert.strictEqual(navi.listClass, customListClass);
       });
       it('the sectionClass property should equal the given custom class: ' + customSectionClass, function() {
         assert.strictEqual(navi.sectionClass, customSectionClass);
@@ -110,29 +124,46 @@ describe('Navi', function() {
       it('the sectionHeights should not be empty', function() {
         assert.notStrictEqual(navi.sectionHeights.length, 0);
       });
+      it('the tickClass property should equal the given custom class: ' + customTickClass, function() {
+        assert.strictEqual(navi.tickClass, customTickClass);
+      });
+      it('the tickCollection property should not be empty', function() {
+        assert.notStrictEqual(navi.tickCollection.length, 0);
+      });
 
       after(function() {
-        removeElements(customTickClass);
+        removeElements(customListClass);
         removeElements(customSectionClass);
       });
     });
   });
 
   describe('with options argument containing properties that DO NOT exist in the DOM', function() {
-    var customTickClass       = 'invalid-item';
+    var customListClass       = 'invalid-list';
     var customSectionClass    = 'invalid-section';
+    var customTickClass       = 'invalid-item';
 
     before(function() {
       generateElements('section', defaultSectionClass, 'main');
       generateElements('indicators', defaultTickClass, 'navi-list');
     });
 
+    describe('given a custom list class, ' + customListClass + ', if the element doesn\'t exist', function() {
+      it('throws an Element Not Found error', function() {
+        var regex = new RegExp('\\bElement Not Found\\b.*\\b' + customListClass + '\\b');
+        expect(function() {
+          navi = new Navi({
+            listClass: customListClass
+          });
+        }).to.throw(Error, regex);
+      });
+    });
     describe('given a custom tick class, ' + customTickClass + ', if the tickCollection property is empty', function() {
       it('throws a Missing Collection error', function() {
         var regex = new RegExp('\\bMissing Collection\\b.*\\b' + customTickClass + '\\b');
         expect(function() {
           navi = new Navi({
-            ticks: customTickClass
+            tickClass: customTickClass
           });
         }).to.throw(Error, regex);
       });
@@ -142,14 +173,14 @@ describe('Navi', function() {
         var regex = new RegExp('\\bMissing Collection\\b.*\\b' + customSectionClass + '\\b');
       expect(function() {
         navi = new Navi({
-          sections: customSectionClass
+          sectionClass: customSectionClass
         });
       }).to.throw(Error, regex);
       });
     });
 
     after(function() {
-      removeElements(defaultTickClass);
+      removeElements(defaultListClass);
       removeElements(defaultSectionClass);
     });
   });
